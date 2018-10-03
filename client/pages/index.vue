@@ -7,72 +7,82 @@
       xs12
       sm8
       md6>
-      <div class="text-xs-center">
-        <logo/>
-        <vuetify-logo/>
-      </div>
       <v-card>
         <v-card-title class="headline">
           Welcome to my GraphQL / Nuxt Project
         </v-card-title>
 
-        <!-- <v-card-text>
+        <v-list two-line>
+          <template v-for="(item) in allUsers">
 
-        </v-card-text> -->
+            <v-list-tile
+              :key="item.id"
+              @click="showDetail()"
+            >
+              <!-- <v-list-tile-avatar>
+                <img :src="item.avatar">
+              </v-list-tile-avatar> -->
 
-        <v-card-actions>
+              <v-list-tile-content>
+                <v-list-tile-title v-html="item.name" />
+                <v-list-tile-sub-title v-html="item.company.name" />
+              </v-list-tile-content>
+
+            </v-list-tile>
+
+          </template>
+        </v-list>
+
+        <!-- <v-card-actions>
           <v-spacer/>
           <v-btn
             color="primary"
             flat
             nuxt
             to="/inspire">Continue</v-btn>
-        </v-card-actions>
+        </v-card-actions> -->
       </v-card>
     </v-flex>
   </v-layout>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-import VuetifyLogo from '~/components/VuetifyLogo.vue'
-
 import { getAllUsers, getUserDetail } from '~/plugins/queries'
 
 export default {
-  components: {
-    Logo,
-    VuetifyLogo
-  },
   data() {
     return {
-      allUsers: getAllUsers
+      allUsers: []
     }
   },
   mounted() {
     console.log('index mounted')
-    this.getDetailData()
+    this.getAllData()
   },
   methods: {
     getAllData() {
-      const allUsers = this.$apollo.query({
+      const vm = this
+      const allUsers = vm.$apollo.query({
         query: getAllUsers
       })
       console.log('allUsers: ', allUsers)
       allUsers.then(
         data => {
-          console.log('allUsers in', data)
+          // console.log('allUsers in: ', data.data.users)
+          vm.allUsers = data.data.users
+          console.log('vm.allUsers: ', vm.allUsers)
         },
         error => {
           console.error(error)
         }
       )
     },
-    getDetailData() {
-      const userDetail = this.$apollo.query({
+    getDetailData(id) {
+      const vm = this
+      const userDetail = vm.$apollo.query({
         query: getUserDetail,
         variables: {
-          id: 3
+          id: id
         }
       })
       console.log('userDetail: ', userDetail)
@@ -84,6 +94,9 @@ export default {
           console.error(error)
         }
       )
+    },
+    showDetail() {
+      console.log('showDetail')
     }
   }
 }
