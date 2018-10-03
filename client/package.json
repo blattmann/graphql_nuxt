@@ -1,31 +1,37 @@
 {
   "name": "graphql_nuxt",
   "version": "1.0.0",
-  "description": "A Nuxt / Vuetify / GraphQL project",
-  "author": "Stefan Blattmann <stefan.blattmann@gmail.com>",
+  "description": "My grqphQL Nuxt project",
+  "author": "Stefan Blattmann",
   "private": true,
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "generate": "nuxt generate"
+    "generate": "nuxt generate",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "precommit": "npm run lint"
   },
   "dependencies": {
+    "@nuxtjs/apollo": "^4.0.0-rc2",
+    "apollo-cache-inmemory": "^1.2.10",
+    "apollo-client": "^2.4.2",
+    "apollo-link-http": "^1.5.5",
+    "cross-env": "^5.2.0",
+    "graphql-tag": "^2.10.0",
     "nuxt": "^2.0.0",
-    "vuetify": "^1.2.5"
+    "vuetify": "^1.2.4"
   },
   "devDependencies": {
-    "babel-eslint": "^7.2.3",
-    "babel-plugin-transform-imports": "^1.4.1",
-    "eslint": "^4.3.0",
-    "eslint-config-standard": "^10.2.1",
-    "eslint-loader": "^1.9.0",
-    "eslint-plugin-html": "^3.1.1",
-    "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-node": "^5.1.1",
-    "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-standard": "^3.0.1",
+    "nodemon": "^1.11.0",
+    "babel-eslint": "^8.2.1",
+    "eslint": "^5.0.1",
+    "eslint-loader": "^2.0.0",
+    "eslint-plugin-vue": "^4.0.0",
+    "eslint-config-prettier": "^3.1.0",
+    "eslint-plugin-prettier": "2.6.2",
+    "prettier": "1.14.3",
     "stylus": "^0.54.5",
-    "stylus-loader": "^3.0.1"
+    "stylus-loader": "^3.0.2"
   }
 }

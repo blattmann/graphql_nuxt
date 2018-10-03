@@ -1,52 +1,108 @@
-const nodeExternals = require('webpack-node-externals')
-const resolve = (dir) => require('path').join(__dirname, dir)
+const pkg = require('./package')
 
 module.exports = {
+  mode: 'spa',
+  /*
+  ** Host settings
+  */
+  server: {
+    port: 3003, // default: 3000
+    host: 'localhost', // default: localhost, options: '0.0.0.0'
+  },
   /*
   ** Headers of the page
   */
   head: {
-    title: 'graphql_nuxt',
+    title: pkg.name,
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: 'A Nuxt / Vuetify / GraphQL project' }
+      { hid: 'description', name: 'description', content: pkg.description }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' }
+      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' },
+      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Raleway:100,200,300,400,500,600,700,800,900&amp;subset=latin-ext' }
     ]
   },
-  plugins: ['~/plugins/vuetify.js'],
+
+  /*
+  ** Customize the progress-bar color
+  */
+  loading: { color: '#fff' },
+
+  /*
+  ** Global CSS
+  */
   css: [
     '~/assets/style/app.styl'
   ],
+
   /*
-  ** Customize the progress bar color
+  ** Plugins to load before mounting the App
   */
-  loading: { color: '#3B8070' },
+  plugins: [
+    '@/plugins/vuetify'
+  ],
+
+  /*
+  ** Nuxt.js modules
+  */
+  modules: [
+    '@nuxtjs/apollo'
+    // '~/plugins/apolloClient'
+  ],
+
+  // Give apollo module options
+  apollo: {
+    tokenName: 'yourApolloTokenName', // optional, default: apollo-token
+    tokenExpires: 10, // optional, default: 7 (days)
+    includeNodeModules: true, // optional, default: false (this includes graphql-tag for node_modules folder)
+    authenticationType: 'Basic', // optional, default: 'Bearer'
+    // optional
+    errorHandler (error) {
+      console.log('%cError', 'background: red; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;', error.message)
+    },
+    // required
+    clientConfigs: {
+      default: {
+        // required
+        httpEndpoint: 'https://3k7kj7xpmv.lp.gql.zone/graphql',
+        // optional
+        // See https://www.apollographql.com/docs/link/links/http.html#options
+        httpLinkOptions: {
+          credentials: 'same-origin'
+        }
+        // You can use `wss` for secure connection (recommended in production)
+        // Use `null` to disable subscriptions
+        // wsEndpoint: 'ws://localhost:4000', // optional
+        // LocalStorage token
+        // tokenName: 'apollo-token', // optional
+        // Enable Automatic Query persisting with Apollo Engine
+        // persisting: false, // Optional
+        // Use websockets for everything (no HTTP)
+        // You need to pass a `wsEndpoint` for this to work
+        // websocketsOnly: false // Optional
+      },
+      // test: {
+      //   httpEndpoint: 'http://localhost:5000',
+      //   wsEndpoint: 'ws://localhost:5000',
+      //   tokenName: 'apollo-token'
+      // },
+      // alternative: user path to config which returns exact same config options
+      test2: '~/plugins/apolloClient.js'
+    }
+  },
+
   /*
   ** Build configuration
   */
   build: {
-    babel: {
-      plugins: [
-        ["transform-imports", {
-          "vuetify": {
-            "transform": "vuetify/es5/components/${member}",
-            "preventFullImport": true
-          }
-        }]
-      ]
-    },
-    vendor: [
-      '~/plugins/vuetify.js'
-    ],
-    extractCSS: true,
     /*
-    ** Run ESLint on save
+    ** You can extend webpack config here
     */
-    extend (config, ctx) {
+    extend(config, ctx) {
+      // Run ESLint on save
       if (ctx.isDev && ctx.isClient) {
         config.module.rules.push({
           enforce: 'pre',
@@ -54,13 +110,6 @@ module.exports = {
           loader: 'eslint-loader',
           exclude: /(node_modules)/
         })
-      }
-      if (ctx.isServer) {
-        config.externals = [
-          nodeExternals({
-            whitelist: [/^vuetify/]
-          })
-        ]
       }
     }
   }
