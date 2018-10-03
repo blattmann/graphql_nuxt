@@ -37,13 +37,54 @@
 import Logo from '~/components/Logo.vue'
 import VuetifyLogo from '~/components/VuetifyLogo.vue'
 
-// import apolloClient from '~/plugins/apolloClient'
-// import gql from 'graphql-tag'
+import { getAllUsers, getUserDetail } from '~/plugins/queries'
 
 export default {
   components: {
     Logo,
     VuetifyLogo
+  },
+  data() {
+    return {
+      allUsers: getAllUsers
+    }
+  },
+  mounted() {
+    console.log('index mounted')
+    this.getDetailData()
+  },
+  methods: {
+    getAllData() {
+      const allUsers = this.$apollo.query({
+        query: getAllUsers
+      })
+      console.log('allUsers: ', allUsers)
+      allUsers.then(
+        data => {
+          console.log('allUsers in', data)
+        },
+        error => {
+          console.error(error)
+        }
+      )
+    },
+    getDetailData() {
+      const userDetail = this.$apollo.query({
+        query: getUserDetail,
+        variables: {
+          id: 3
+        }
+      })
+      console.log('userDetail: ', userDetail)
+      userDetail.then(
+        data => {
+          console.log('userDetail in', data)
+        },
+        error => {
+          console.error(error)
+        }
+      )
+    }
   }
 }
 </script>
