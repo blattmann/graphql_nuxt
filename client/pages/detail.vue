@@ -2,9 +2,9 @@
   <v-layout>
     <v-flex xs12 sm6 offset-sm3>
       <v-card-title v-if="loading">
-        <v-progress-linear v-if="loading" slot="progress" color="blue" indeterminate></v-progress-linear>
+        <v-progress-linear v-if="loading" slot="progress" color="white" indeterminate></v-progress-linear>
       </v-card-title>
-      <v-card v-if="detailUser">
+      <v-card v-if="detailUser && !loading">
         <v-img
           :src="detailUser.poster"
           aspect-ratio="2.75"
@@ -107,7 +107,6 @@ export default {
   methods: {
     editDetail(id) {
       const vm = this
-      console.log('editDetail: ', id)
       vm.$router.push({
         name: 'edit',
         query: { id: id }

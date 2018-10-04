@@ -13,7 +13,7 @@
         </v-card-title>
 
         <v-card-title v-if="loading">
-          <v-progress-linear v-if="loading" slot="progress" color="blue" indeterminate></v-progress-linear>
+          <v-progress-linear v-if="loading" slot="progress" color="white" indeterminate></v-progress-linear>
         </v-card-title>
 
         <v-list two-line>

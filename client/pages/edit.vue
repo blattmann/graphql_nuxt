@@ -1,10 +1,12 @@
 <template>
   <v-layout>
     <v-flex xs12 sm6 offset-sm3>
+
       <v-card-title v-if="loading">
-        <v-progress-linear v-if="loading" slot="progress" color="blue" indeterminate></v-progress-linear>
+        <div v-if="updating" >{{ i18n.updating }}</div>
+        <v-progress-linear v-if="loading" slot="progress" color="white" indeterminate></v-progress-linear>
       </v-card-title>
-      <v-card v-if="detailUser">
+      <v-card v-if="detailUser && !loading">
         <v-img
           :src="detailUser.poster"
           aspect-ratio="2.75"
@@ -34,7 +36,7 @@
               <v-text-field
                 :value="detailUser.id"
                 :label="i18n.id"
-                readonly="readonly"
+                disabled="disabled"
               ></v-text-field>
             </v-flex>
 
@@ -44,7 +46,7 @@
                 :label="i18n.name"
                 v-model="detailUser.name"
                 :rules="[rules.required, rules.name.check]"
-                @change="allowCancel"
+                @change="toggleCancel()"
               ></v-text-field>
             </v-flex>
 
@@ -54,7 +56,7 @@
                 :label="i18n.email"
                 v-model="detailUser.email"
                 :rules="[rules.required, rules.email.check]"
-                @change="allowCancel"
+                @change="toggleCancel()"
               ></v-text-field>
             </v-flex>
 
@@ -64,24 +66,25 @@
                 :label="i18n.company"
                 v-model="detailUser.company.name"
                 :rules="[rules.required, rules.company.check]"
-                @change="allowCancel"
+                @change="toggleCancel()"
               ></v-text-field>
             </v-flex>
           </v-card-title>
 
           <div class="text-xs-center">
             <v-btn
-              flat
-              color="orange"
-              @click="saveData()">{{ i18n.save }}</v-btn>
-
-            <v-btn
-              v-if="showCancel"
+              :disabled="disableCancel"
               flat
               color="red"
               @click.native="cancel()">
               {{ i18n.cancel }}
             </v-btn>
+
+            <v-btn
+              flat
+              color="orange"
+              :disabled="!valid"
+              @click="saveData()">{{ i18n.save }}</v-btn>
 
             <v-btn
               flat
@@ -96,7 +99,7 @@
 </template>
 
 <script>
-import { getUserDetail } from '~/plugins/queries'
+import { getUserDetail, updateUser } from '~/plugins/queries'
 import { i18n, rex } from '~/plugins/helpers'
 
 export default {
@@ -134,8 +137,9 @@ export default {
           }
         }
       },
-      showCancel: false,
-      loading: true
+      disableCancel: true,
+      loading: true,
+      updating: false
     }
   },
   apollo: {
@@ -152,20 +156,8 @@ export default {
         data.userdetail.poster = posterImage
         data.userdetail.avatar = `avatars/${vm.userId}.png`
         vm.loading = false
-        return data.userdetail
-      }
-    },
-    backupUser: {
-      query: getUserDetail,
-      variables() {
-        return {
-          id: this.userId
-        }
-      },
-      update(data) {
-        const posterImage = this.poster[Math.floor(Math.random()*this.poster.length)]
-        data.userdetail.poster = posterImage
-        data.userdetail.avatar = `avatars/${this.userId}.png`
+        localStorage.removeItem('graphQLnuxt')
+        localStorage.setItem('graphQLnuxt', JSON.stringify(data.userdetail))
         return data.userdetail
       }
     }
@@ -173,7 +165,6 @@ export default {
   methods: {
     showDetail(id) {
       const vm = this
-      console.log('showDetail: ', id)
       vm.$router.push({
         name: 'detail',
         query: { id: id }
@@ -181,7 +172,6 @@ export default {
     },
     passValidation (item, value) {
       const vm = this
-
       let ret = ''
       if (value) {
         switch(item) {
@@ -223,22 +213,53 @@ export default {
         ret = false
       }
 
-      // console.log('ret: ', ret)
       return ret
     },
     saveData() {
       const vm = this
-      console.log('saveData')
+      if (vm.$refs.userdetailform.validate()) {
+        vm.loading = true
+        vm.updating = true
+        const editUser = vm.$apollo.mutate({
+          mutation: updateUser,
+          variables: {
+            id: vm.userId,
+            user: {
+              name: vm.detailUser.name,
+              email: vm.detailUser.email,
+              company: {
+                name: vm.detailUser.company.name
+              }
+            }
+          }
+        })
+
+        editUser.then(
+          data => {
+            vm.loading = false
+            vm.updating = false
+            let res = data.data.updateUser
+            const posterImage = vm.poster[Math.floor(Math.random()*vm.poster.length)]
+            res.poster = posterImage
+            res.avatar = `avatars/${vm.userId}.png`
+            vm.detailUser = res
+
+            // I am keeping this log to prove the reply from GraphQL
+            console.log('Response from GraphQL: ', res)
+          },
+          error => {
+            console.error(error)
+          }
+        )
+      }
     },
-    allowCancel () {
-      this.showCancel = true
+    toggleCancel () {
+      this.disableCancel = false
     },
     cancel () {
       const vm = this
-      console.log('cancel form editing')
-      vm.valid = false
-      vm.detailUser = vm.backupUser
-      // vm.detailUser = vm.apollo
+      vm.disableCancel = true
+      vm.detailUser = JSON.parse(localStorage.getItem('graphQLnuxt'))
     }
   }
 }

@@ -1,6 +1,7 @@
 const i18n = {
   id: 'ID',
   required: 'Required',
+  updating: 'Data is updating',
   name: 'Name',
   email: 'Email',
   company: 'Company',
