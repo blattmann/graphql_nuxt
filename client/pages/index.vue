@@ -67,7 +67,15 @@ export default {
   },
   mounted() {
     console.log('index mounted')
-    this.getAllData()
+    // this.getAllData()
+  },
+  apollo: {
+    allUsers: {
+      query: getAllUsers,
+      update(data) {
+        return data.users
+      }
+    }
   },
   methods: {
     getAllData() {

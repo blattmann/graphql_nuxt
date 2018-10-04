@@ -7,15 +7,15 @@
           aspect-ratio="2.75"
         ></v-img>
 
-        <!-- {{ detailUser }} -->
+        {{ detailUser }}
 
-        <v-card-title primary-title>
+        <!-- <v-card-title primary-title>
           <div>
             <h3 class="headline mb-0" v-if="detailUser.name">{{ detailUser.name }}</h3>
             <div>
               <p v-if="detailUser.email">
                 <strong>Email:</strong>
-                <a :href="`mailto:${detailUser.email}`" class="hyperlink">
+                <a :href="`mailto:${detailUser.email}`">
                   {{ detailUser.email }}
                 </a>
               </p>
@@ -24,7 +24,7 @@
               </p>
             </div>
           </div>
-        </v-card-title>
+        </v-card-title> -->
 
         <v-card-actions>
           <v-btn flat color="orange">Edit</v-btn>
@@ -42,7 +42,7 @@
 import { getUserDetail } from '~/plugins/queries'
 
 export default {
-  name: 'detailPage',
+  name: 'editPage',
   data() {
     return {
       detailUser: null,
