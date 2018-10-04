@@ -1,19 +1,22 @@
 # graphql-nuxt
 
-### Setup
+> My astonishing GraphQL / Nuxt.js project
 
-#### Initial Setup:
+## Build Setup
 
-Install node
+``` bash
+# install dependencies
+$ npm install
 
-Install `nodemon`
+# serve with hot reload at localhost:3000
+$ npm run dev
 
+# build for production and launch server
+$ npm run build
+$ npm start
+
+# generate static project
+$ npm run generate
 ```
-$ npm i -g nodemon
-```
 
-`cd` into `server` and run `$ npm i`
-Then start the local node server: `$ nodemon app`.
-
-Open a new tab in your terminal,`cd` to `client` and run `$ npm i`
-Then run `$ npm run dev`
+For detailed explanation on how things work, checkout [Nuxt.js docs](https://nuxtjs.org).
