@@ -99,8 +99,8 @@
 </template>
 
 <script>
-import { getUserDetail, updateUser } from '~/plugins/queries'
-import { i18n, rex } from '~/plugins/helpers'
+import { getUserDetail, updateUser } from '@/plugins/queries'
+import { i18n, rex } from '@/plugins/helpers'
 
 export default {
   name: 'editPage',
@@ -153,10 +153,15 @@ export default {
       update(data) {
         const vm = this
         const posterImage = vm.poster[Math.floor(Math.random()*vm.poster.length)]
+        // add a poster to the user
         data.userdetail.poster = posterImage
+        // add an avatar to the user
         data.userdetail.avatar = `avatars/${vm.userId}.png`
         vm.loading = false
+
         localStorage.removeItem('graphQLnuxt')
+        // keep backup data in case the user wants to reset
+        // to the state before he made some changes
         localStorage.setItem('graphQLnuxt', JSON.stringify(data.userdetail))
         return data.userdetail
       }

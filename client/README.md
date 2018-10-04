@@ -1,6 +1,6 @@
-# client
+# graphql-nuxt
 
-> My astonishing Nuxt.js project
+> My astonishing GraphQL / Nuxt.js project
 
 ## Build Setup
 

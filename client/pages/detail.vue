@@ -65,8 +65,8 @@
 </template>
 
 <script>
-import { getUserDetail } from '~/plugins/queries'
-import { i18n } from '~/plugins/helpers'
+import { getUserDetail } from '@/plugins/queries'
+import { i18n } from '@/plugins/helpers'
 
 export default {
   name: 'detailPage',
@@ -97,7 +97,9 @@ export default {
       update(data) {
         const vm = this
         const posterImage = vm.poster[Math.floor(Math.random()*vm.poster.length)]
+        // add a poster to the user
         data.userdetail.poster = posterImage
+        // add an avatar to the user
         data.userdetail.avatar = `avatars/${vm.userId}.png`
         vm.loading = false
         return data.userdetail

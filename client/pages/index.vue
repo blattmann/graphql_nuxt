@@ -3,10 +3,7 @@
     column
     justify-center
     align-center>
-    <v-flex
-      xs12
-      sm8
-      md6>
+    <v-flex xs12 sm8 md6>
       <v-card>
         <v-card-title class="headline">
           Welcome to my GraphQL / Nuxt Project
@@ -21,8 +18,8 @@
 
             <v-list-tile
               :key="item.id"
-              @click="showDetail(item.id)"
-            >
+              @click="showDetail(item.id)">
+
               <v-list-tile-avatar>
                 <img :src="item.avatar">
               </v-list-tile-avatar>
@@ -32,6 +29,7 @@
                 <v-list-tile-sub-title v-html="item.company.name" />
               </v-list-tile-content>
 
+              <i class="material-icons" @click="showDetail(item.id)">open_in_new</i>
             </v-list-tile>
 
           </template>
@@ -58,10 +56,10 @@ export default {
         const vm = this
         let avatarImage = ''
         data.users.forEach(function (user, index) {
-          // add avatar to the user
+          // add an avatar to the user
           user.avatar = `avatars/${index+1}.png`
         })
-        this.loading = false
+        vm.loading = false
         return data.users
       }
     }
