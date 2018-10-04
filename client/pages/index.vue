@@ -17,7 +17,7 @@
 
             <v-list-tile
               :key="item.id"
-              @click="showDetail()"
+              @click="showDetail(item.id)"
             >
               <!-- <v-list-tile-avatar>
                 <img :src="item.avatar">
@@ -39,6 +39,15 @@
             color="primary"
             flat
             nuxt
+            to="/detail">Continue</v-btn>
+        </v-card-actions> -->
+
+        <!-- <v-card-actions>
+          <v-spacer/>
+          <v-btn
+            color="primary"
+            flat
+            nuxt
             to="/inspire">Continue</v-btn>
         </v-card-actions> -->
       </v-card>
@@ -47,6 +56,7 @@
 </template>
 
 <script>
+import EventBus from '@/eventbus'
 import { getAllUsers, getUserDetail } from '~/plugins/queries'
 
 export default {
@@ -95,8 +105,14 @@ export default {
         }
       )
     },
-    showDetail() {
-      console.log('showDetail')
+    showDetail(id) {
+      const vm = this
+      console.log('showDetail: ', id)
+      // EventBus.$emit(id)
+      vm.$router.push({
+        name: 'detail',
+        query: { id: id }
+      })
     }
   }
 }
