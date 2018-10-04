@@ -12,6 +12,10 @@
           Welcome to my GraphQL / Nuxt Project
         </v-card-title>
 
+        <v-card-title v-if="loading">
+          <v-progress-linear v-if="loading" slot="progress" color="blue" indeterminate></v-progress-linear>
+        </v-card-title>
+
         <v-list two-line>
           <template v-for="(item) in allUsers">
 
@@ -19,9 +23,9 @@
               :key="item.id"
               @click="showDetail(item.id)"
             >
-              <!-- <v-list-tile-avatar>
+              <v-list-tile-avatar>
                 <img :src="item.avatar">
-              </v-list-tile-avatar> -->
+              </v-list-tile-avatar>
 
               <v-list-tile-content>
                 <v-list-tile-title v-html="item.name" />
@@ -32,91 +36,39 @@
 
           </template>
         </v-list>
-
-        <!-- <v-card-actions>
-          <v-spacer/>
-          <v-btn
-            color="primary"
-            flat
-            nuxt
-            to="/detail">Continue</v-btn>
-        </v-card-actions> -->
-
-        <!-- <v-card-actions>
-          <v-spacer/>
-          <v-btn
-            color="primary"
-            flat
-            nuxt
-            to="/inspire">Continue</v-btn>
-        </v-card-actions> -->
       </v-card>
     </v-flex>
   </v-layout>
 </template>
 
 <script>
-import EventBus from '@/eventbus'
-import { getAllUsers, getUserDetail } from '~/plugins/queries'
+import { getAllUsers } from '@/plugins/queries'
 
 export default {
   data() {
     return {
-      allUsers: []
+      allUsers: [],
+      loading: true
     }
-  },
-  mounted() {
-    console.log('index mounted')
-    // this.getAllData()
   },
   apollo: {
     allUsers: {
       query: getAllUsers,
       update(data) {
+        const vm = this
+        let avatarImage = ''
+        data.users.forEach(function (user, index) {
+          // add avatar to the user
+          user.avatar = `avatars/${index+1}.png`
+        })
+        this.loading = false
         return data.users
       }
     }
   },
   methods: {
-    getAllData() {
-      const vm = this
-      const allUsers = vm.$apollo.query({
-        query: getAllUsers
-      })
-      console.log('allUsers: ', allUsers)
-      allUsers.then(
-        data => {
-          // console.log('allUsers in: ', data.data.users)
-          vm.allUsers = data.data.users
-          console.log('vm.allUsers: ', vm.allUsers)
-        },
-        error => {
-          console.error(error)
-        }
-      )
-    },
-    getDetailData(id) {
-      const vm = this
-      const userDetail = vm.$apollo.query({
-        query: getUserDetail,
-        variables: {
-          id: id
-        }
-      })
-      console.log('userDetail: ', userDetail)
-      userDetail.then(
-        data => {
-          console.log('userDetail in', data)
-        },
-        error => {
-          console.error(error)
-        }
-      )
-    },
     showDetail(id) {
       const vm = this
-      console.log('showDetail: ', id)
-      // EventBus.$emit(id)
       vm.$router.push({
         name: 'detail',
         query: { id: id }

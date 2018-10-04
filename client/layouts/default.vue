@@ -1,8 +1,6 @@
 <template>
   <v-app dark>
     <v-toolbar
-      :clipped-left="clipped"
-      fixed
       app
     >
       <v-btn
@@ -20,10 +18,9 @@
       </v-container>
     </v-content>
     <v-footer
-      :fixed="fixed"
       app
     >
-      <span>&copy; {{ copy }} <a :href="authorUrl" v-text="author" class="hyperlink"></a></span>
+      <span class="copyright">&copy; {{ copy }} <a :href="authorUrl" target="_blank" v-text="author" class="hyperlink"></a></span>
     </v-footer>
   </v-app>
 </template>

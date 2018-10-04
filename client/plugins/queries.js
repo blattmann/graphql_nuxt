@@ -26,4 +26,13 @@ const getUserDetail = gql`
   }
 `
 
+const updateUser = gql`
+  mutation updateUser($id: ID, $user: UserInput) {
+    updateUser(id: $id, user:$user) {
+      id
+      name
+    }
+  }
+`
+
 export { getAllUsers, getUserDetail }
