@@ -2,6 +2,9 @@
 
 > My astonishing GraphQL / Nuxt.js project
 
+## Preview
+[![Watch a preview on Youtube.](https://img.youtube.com/vi/oTs-Yfrt7BU/0.jpg)](https://youtu.be/oTs-Yfrt7BU)
+
 ## Build Setup
 
 ``` bash
