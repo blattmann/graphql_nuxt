@@ -18,8 +18,9 @@
           v-if="detailUser.company.name"
         >
           <v-layout fill-height>
+            <div class="poster__backdrop"></div>
             <v-flex xs12 align-end flexbox>
-              <span class="headline text-outline" v-text="detailUser.company.name"></span>
+              <span class="headline poster__headline" v-text="detailUser.company.name"></span>
             </v-flex>
           </v-layout>
         </v-container>
