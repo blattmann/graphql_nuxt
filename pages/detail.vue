@@ -1,6 +1,7 @@
 <template>
-  <v-layout>
-    <v-flex xs12 sm6 offset-sm3>
+  <v-layout column>
+    <v-flex xs12 sm8 md6>
+
       <v-card-title v-if="loading">
         <v-progress-linear v-if="loading" slot="progress" color="white" indeterminate></v-progress-linear>
       </v-card-title>
